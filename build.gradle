@@ -1,28 +1,33 @@
-plugins {
-    id "dev.architectury.loom" version "0.12.0-SNAPSHOT"
-    id "maven-publish"
+buildscript {
+    dependencies {
+        classpath 'com.github.BocchiKessokuTeam.ArchitecturyLoomLegacy:ArchitecturyLoom-Legacy:dev~0.12.0-legacy-SNAPSHOT'
+    }
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+plugins {
+    id "java"
+    id "maven-publish"
+}
+apply plugin: "dev.architectury.legacy.loom"
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
 loom {
-    // use this if you are using the official mojang mappings
-    // and want loom to stop warning you about their license
-    silentMojangMappingsLicense()
-
+    setIntermediaryUrl("https://maven.legacyfabric.net/net/fabricmc/intermediary/${minecraft_version}/intermediary-${minecraft_version}-v2.jar")
+    //customMinecraftManifest.set("https://meta.legacyfabric.net/v2/manifest/${minecraft_version}")
     // since loom 0.10, you are **required** to use the
     // "forge" block to configure forge-specific features,
     // such as the mixinConfigs array or datagen
     forge {
         // specify the mixin configs used in this mod
         // this will be added to the jar manifest as well!
-        mixinConfigs = [
-                "examplemod.mixins.json"
-        ]
+        //mixinConfigs = [
+        //        "examplemod.mixins.json"
+        //]
 
         // missing access transformers?
         // don't worry, you can still use them!
@@ -66,14 +71,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
     // choose what mappings you want to use here
-    // leave this uncommented if you want to use
-    // mojang's official mappings, or feel free
-    // to add your own mappings here (how about
-    // mojmap layered with parchment, for example?)
-    mappings loom.officialMojangMappings()
-
-    // uncomment this if you want to use yarn mappings
-    // mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    mappings "de.oceanlabs.mcp:mcp_${project.mcp_channel}:${project.mcp_version}@zip"
 
     // your forge dependency, this is **required** when using Forge Loom in forge mode!
     forge "net.minecraftforge:forge:${project.forge_version}"
@@ -88,19 +86,23 @@ dependencies {
     // compile against the JEI API but do not include it at runtime
     // don't worry about loom "not finding a forge mod" here,
     // JEI's api just doesn't have any class with an @Mod annotation
-    // modCompileOnly "mezz.jei:jei-1.19.2:${jei_version}:api"
+    // modCompileOnly "mezz.jei:jei-1.12.2:${jei_version}:api"
     // at runtime, use the full JEI jar
-    // modRuntimeOnly "mezz.jei:jei-1.19.2:${jei_version}"
+    // modRuntimeOnly "mezz.jei:jei-1.12.2:${jei_version}"
 }
 
 processResources {
     // define properties that can be used during resource processing
-    inputs.property "version", project.version
+    inputs.property "mod_version", project.version
+    inputs.property "mod_id", project.mod_id
+    inputs.property "mc_version", project.minecraft_version
 
-    // this will replace the property "${version}" in your mods.toml
+    // this will replace the property "${modVersion}" in your mcmod.info
     // with the version you've defined in your gradle.properties
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+    filesMatching("mcmod.info") {
+        expand "mod_version": project.version,
+                "mod_id": project.mod_id,
+                "mc_version": project.minecraft_version
     }
 }
 
