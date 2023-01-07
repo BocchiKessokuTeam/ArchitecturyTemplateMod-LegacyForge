@@ -1,10 +1,10 @@
 buildscript {
     dependencies {
-        classpath 'com.github.BocchiKessokuTeam.ArchitecturyLoomLegacy:ArchitecturyLoom-Legacy:dev~0.12.0-legacy-SNAPSHOT'
+        classpath 'com.github.BocchiKessokuTeam.ArchitecturyLoomLegacy:ArchitecturyLoom-Legacy:0.12.0.2'
     }
 }
-
 plugins {
+    //id "dev.architectury.legacy.loom" version "0.12.0.2"
     id "java"
     id "maven-publish"
 }
@@ -17,8 +17,7 @@ version = project.mod_version
 group = project.maven_group
 
 loom {
-    setIntermediaryUrl("https://maven.legacyfabric.net/net/fabricmc/intermediary/${minecraft_version}/intermediary-${minecraft_version}-v2.jar")
-    customMinecraftManifest.set("https://meta.legacyfabric.net/v2/manifest/${minecraft_version}")
+
     // since loom 0.10, you are **required** to use the
     // "forge" block to configure forge-specific features,
     // such as the mixinConfigs array or datagen
@@ -100,9 +99,9 @@ processResources {
     // this will replace the property "${modVersion}" in your mcmod.info
     // with the version you've defined in your gradle.properties
     filesMatching("mcmod.info") {
-        expand "mod_version": project.version,
-                "mod_id": project.mod_id,
-                "mc_version": project.minecraft_version
+        expand "mod_version": project.version
+        expand "mod_id": project.mod_id
+        expand "mc_version": project.minecraft_version
     }
 }
 
