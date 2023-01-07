@@ -18,7 +18,7 @@ group = project.maven_group
 
 loom {
     setIntermediaryUrl("https://maven.legacyfabric.net/net/fabricmc/intermediary/${minecraft_version}/intermediary-${minecraft_version}-v2.jar")
-    //customMinecraftManifest.set("https://meta.legacyfabric.net/v2/manifest/${minecraft_version}")
+    customMinecraftManifest.set("https://meta.legacyfabric.net/v2/manifest/${minecraft_version}")
     // since loom 0.10, you are **required** to use the
     // "forge" block to configure forge-specific features,
     // such as the mixinConfigs array or datagen
